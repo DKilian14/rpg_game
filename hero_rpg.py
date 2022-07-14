@@ -160,7 +160,9 @@ def displayCreationMenu():
     user_choice = int(input("what would you like to do? "))
     return user_choice
 
-
+def save(map):
+    with open('data.pickle','wb') as filehandler:
+        pickle.dump(map.actualized_map, filehandler)
 
 ################## RUNS THE GAME
 def main():
@@ -180,8 +182,7 @@ def main():
             mordor.seeMap()
         elif user_choice == 3:
             print('goodbye')
-            with open('data.pickle','wb') as filehandler:
-                pickle.dump(mordor.actualized_map, filehandler)
+            save(mordor)
             break
         elif user_choice == 4:
             mordor.actualized_map = mordor.createMap()
@@ -201,7 +202,5 @@ try:
 except:
     data = []
     
-        # mordor.seeMap()
-        # mordor.addThing()
         
 main()
