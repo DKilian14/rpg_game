@@ -39,7 +39,7 @@ def main():
             hero_health -= goblin_power
             print("The goblin does {} damage to you.".format(goblin_power))
             if hero_health <= 0:
-                print("You are dead.")
+                print("You are dead. Chachachacha. Chachachacha")
 
 main()
 
