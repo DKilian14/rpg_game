@@ -112,24 +112,23 @@ class Map:
         
     ########################## DELETE A THING ##############################################
     # *************ISSUE******* if there are any things with the same name, this will delete the first thing with a matching name on the map. This is due to not having unique identifiers. 
-    def deleteThing(self):
-        thing_name = self.lookUpByName() #Will return the object with the name the user requested. 
+    def deleteThing(self, thing):
+        
         revised_cell = []
-        prev_cell = self.actualized_map[thing_name.location_row][thing_name.location_column]
+        prev_cell = self.actualized_map[thing.location_row][thing.location_column]
         for i in prev_cell:
-            if i[0] != thing_name.name:
+            if i[0] != thing.name:
                 revised_cell.append(i)
-        self.actualized_map[thing_name.location_row][thing_name.location_column] = revised_cell
-        return thing_name
+        self.actualized_map[thing.location_row][thing.location_column] = revised_cell
+        return thing
     
     
     ######################### MOVE A THING ###################################################
     
-    def moveThing(self):
-        self.printAllThings()
-        thing_object = self.deleteThing()
-        thing_object.location_row, thing_object.location_column = [int(x) for x in input('enter the location of the thing you would like to add: >>').split(',')]
-        self.actualized_map[thing_object.location_row][thing_object.location_column].append([thing_object.name,thing_object])
+    def moveThing(self,thing,row,column):
+        thing.location_row = row
+        thing.location_column = column
+        self.actualized_map[row][column].append([thing.name,thing])
     
     ######################### CHANGE ATTRIBUTE OF THING ######################################
     
@@ -178,9 +177,6 @@ class NPC(Character):       #Child of Character
         self.alliance = alliance
         super(NPC, self).__init__(name, weight, location_row, location_column, power, health)
         
-    
-
-
 #----------------  MENUS  ---------------------------------------------------
 
 def displayCreationMenu():
@@ -204,23 +200,61 @@ def displayInGameMenu():
 
 
 def findMainCharacter(map):
-    return map.getListOfAllThings()
+    for i in map.getListOfAllThings():
+        if type(i).__name__ == 'PC': 
+            return i
     
 
-
+def move(map):
+    character = findMainCharacter(map)
+    print(map.seeMap())
+    
+    direction = int(input("""
+        Move which direction?
+1. up
+2. down
+3. left
+4. right
+        
+        """))
+    
+    if direction == 1:
+        if character.location_row-1 <0:
+            character = map.deleteThing(character)
+            map.moveThing(character, character.location_row-1, character.location_column)
+        else:
+            print("you hit a wall")
+    if direction == 2:
+        try:
+            character = map.deleteThing(character)
+            map.moveThing(character, character.location_row+1, character.location_column)  
+        except:
+            print("you hit a wall")
+    if direction == 3:
+        try:
+            character = map.deleteThing(character)
+            map.moveThing(character, character.location_row, character.location_column-1)  
+        except:
+            print("you hit a wall")
+    if direction == 4:
+        try:
+            character = map.deleteThing(character)
+            map.moveThing(character, character.location_row, character.location_column+1)  
+        except:
+            print("you hit a wall")
 
 
 
 def play(map):
-    print(map)
+    
     main_character = findMainCharacter(map)
-    print(main_character[0])
-    print(type(main_character[0]).__name__)
+    print(main_character)
+    
     
     while True:
         user_choice = displayInGameMenu()
         if user_choice == 1:
-            pass
+            move(map)
         if user_choice == 2:
             pass
         if user_choice == 3:
@@ -260,11 +294,16 @@ def main():
             mordor.lookUpByName()
         elif user_choice == 6:
             print("*Delete Thing*")
-            mordor.deleteThing()
+            thing = mordor.lookUpByName()
+            mordor.deleteThing(thing)
         elif user_choice == 7:
             mordor.printAllThings()
         elif user_choice == 8:
-            mordor.moveThing()
+            mordor.printAllThings()
+            thing = mordor.lookUpByName()
+            mordor.deleteThing(thing)
+            row, column = [int(x) for x in input('enter the location of the thing you would like to add: >>').split(',')]
+            mordor.moveThing(thing,row,column)
         elif user_choice == 9:
             mordor.changeThing()
         
