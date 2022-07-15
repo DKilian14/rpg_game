@@ -1,12 +1,5 @@
 import pickle
 
-# In this simple RPG game, the hero fights the goblin. He has the options to:
-
-# 1. fight goblin
-# 2. do nothing - in which case the goblin will attack him anyway
-# 3. flee
-
-
 
 class Map:
     def __init__(self, name, size,data):
@@ -82,38 +75,71 @@ class Map:
         self.actualized_map[newObj.location_row][newObj.location_column].append([newObj.name,newObj])
    
    
-#------------------------------THING FINDER -----------------------------------------------------------------------------------------------------------
 
-    def checkCells(self):
-        thing_to_find = input('enter the name of the thing you want to manipulate: >>')
-        for every_row in range(len(self.actualized_map)):
-           for every_cell in range(len(self.actualized_map[every_row])):
-                if self.actualized_map[every_row][every_cell]:
-                    the_thing = self.lookAtThingsInCells(self.actualized_map[every_row][every_cell], thing_to_find)
-                    return the_thing
-
-    def lookAtThingsInCells(self, the_cell, thing_to_find):
         
-        # print(the_cell)
-        for thing in the_cell:
-            # print(thing[1].name)
-            if thing[1].name == thing_to_find:
-                # print('found it')
-                print(f'{thing[1].name} is at {thing[1].location_row}, {thing[1].location_column}')
-                return thing[1]
             
+#----------------------------GET LIST OF ALL THINGS------------------------------------------------------------------------------------------------------------------
+
+    def getListOfAllThingsInCell(self, the_cell, all_things_in_map):
+        for every_thing in the_cell:
+            all_things_in_map.append(every_thing[1])
         
-    ########################## THING DELETER ###################################################################
+    def getListOfAllThings(self):
+        all_things_in_map = []
+        for every_row in range(len(self.actualized_map)):
+            for every_cell in range(len(self.actualized_map[every_row])):
+                self.getListOfAllThingsInCell(self.actualized_map[every_row][every_cell], all_things_in_map)
+
+
+            
+        return all_things_in_map
+    
+    ########################## PRINT ALL THINGS ###########################################
+    
+    def printAllThings(self):
+        all_things_in_map = self.getListOfAllThings()
+        for every_item in all_things_in_map:
+            print(every_item.__dict__.get('name'), "is at [",  every_item.__dict__.get('location_row'), ", ", every_item.__dict__.get('location_column'),']')
+        
+        
+        
+        
+    ########################### FIND THING BY NAME #########################################
+
+    def LookupByName(self):
+        all_things = self.getListOfAllThings()
+        query= input("Enter the name of the thing >>")
+        for i in all_things:
+            if i.name == query:
+                print(f"{i.name} is at {i.location_row}, {i.location_column}")
+                return i        
+        
+        
+        
+        
+    ########################## DELETE A THING ##############################################
     # *************ISSUE******* if there are any things with the same name, this will delete the first thing with a matching name on the map. This is due to not having unique identifiers. 
     def deleteThing(self):
-        thing_to_delete = self.checkCells() #Will return the object with the name the user requested. 
-        rev_list_of_things = []
-        #loop through the items within the cell and add them to the rev_list_of_things. 
-        for i in self.actualized_map[thing_to_delete.location_row][thing_to_delete.location_column]:
-            if i[0] != thing_to_delete.name:
-                rev_list_of_things.append(i)
-        #revise the entire cell the Thing was in. to the rev_list_of_things. 
-        self.actualized_map[thing_to_delete.location_row][thing_to_delete.location_column] = rev_list_of_things
+        print("*Delete Thing*")
+        thing_name = self.LookupByName() #Will return the object with the name the user requested. 
+        revised_cell = []
+        prev_cell = self.actualized_map[thing_name.location_row][thing_name.location_column]
+        
+        for i in prev_cell:
+            if i[0] != thing_name.name:
+                revised_cell.append(i)
+                
+        self.actualized_map[thing_name.location_row][thing_name.location_column] = revised_cell
+    
+    
+    
+    ######################### MOVE A THING ###################################################
+    
+    def moveThing(self):
+        pass
+    
+    
+    
     
     
     
@@ -128,7 +154,6 @@ class Thing:
         
 class Item(Thing):          #Child of Thing
     def __init__(self, name, weight,location_row, location_column, action):
-
         self.action = action
         super(Item, self).__init__(name, weight, location_row, location_column)
     
@@ -154,7 +179,7 @@ class NPC(Character):       #Child of Character
 
 
 def displayCreationMenu():
-    creation_menu = ['add thing', 'see map', 'quit','delete map', 'find thing','delete thing']
+    creation_menu = ['add thing', 'see map', 'quit','delete map', 'find thing','delete thing', 'list all things in map', 'Move a thing']
     for i in range(len(creation_menu)):
         print(i+1, creation_menu[i])
     user_choice = int(input("what would you like to do? "))
@@ -187,11 +212,13 @@ def main():
         elif user_choice == 4:
             mordor.actualized_map = mordor.createMap()
         elif user_choice == 5:
-            mordor.checkCells()
+            mordor.LookupByName()
         elif user_choice == 6:
             mordor.deleteThing()
-        
-        
+        elif user_choice == 7:
+            mordor.printAllThings()
+        elif user_choice == 8:
+            mordor.moveThing()
         
         
         
