@@ -192,8 +192,8 @@ def displayCreationMenu():
 def displayInGameMenu(character, map):
     menu = ['move', 'check status', 'save and quit']
     room = map.actualized_map[character.location_row][character.location_column]
-    for i in room:
-        if i
+    for i in room: # for every item in the room the hero is in, check if there is at least one item and/or at least one enemy. This will then append the menu list to add 'use item' or 'fight'
+        # if i
     
     
     for i in range(len(menu)):
