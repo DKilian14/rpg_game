@@ -195,7 +195,6 @@ def displayInGameMenu():
     return user_choice
 
 
-
 #----------------GAMEPLAY FUNCTIONS---------------------------------------------------------------------------
 
 
@@ -219,16 +218,20 @@ def move(map):
         """))
     
     if direction == 1:
-        if character.location_row-1 <0:
+        print("I'm at row: ", character.location_row)
+        if character.location_row-1 > 0:
             character = map.deleteThing(character)
             map.moveThing(character, character.location_row-1, character.location_column)
+            print(map.seeMap())
         else:
             print("you hit a wall")
     if direction == 2:
-        try:
+        print(map.size)
+        if character.location_row+1 < map.size:
             character = map.deleteThing(character)
-            map.moveThing(character, character.location_row+1, character.location_column)  
-        except:
+            map.moveThing(character, character.location_row+1, character.location_column)
+            print(map.seeMap())  
+        else:
             print("you hit a wall")
     if direction == 3:
         try:
@@ -242,7 +245,6 @@ def move(map):
             map.moveThing(character, character.location_row, character.location_column+1)  
         except:
             print("you hit a wall")
-
 
 
 def play(map):
@@ -262,11 +264,7 @@ def play(map):
             print('Game saved. thank you for playing!')
             break
     
-
-
-
-
-
+    
 
 ################## STARTS THE CREATION MENU. 
 def main():
