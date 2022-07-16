@@ -185,10 +185,17 @@ def displayCreationMenu():
         print(i+1, creation_menu[i])
     user_choice = int(input("what would you like to do? "))
     return user_choice
+ 
+ 
+ 
 
-
-def displayInGameMenu():
+def displayInGameMenu(character, map):
     menu = ['move', 'check status', 'save and quit']
+    room = map.actualized_map[character.location_row][character.location_column]
+    for i in room:
+        if i
+    
+    
     for i in range(len(menu)):
         print(i+1, menu[i])
     user_choice = int(input("what would you like to do? "))
@@ -202,7 +209,6 @@ def findMainCharacter(map):
     for i in map.getListOfAllThings():
         if type(i).__name__ == 'PC': 
             return i
-    
 
 def move(map):
     character = findMainCharacter(map)
@@ -214,37 +220,54 @@ def move(map):
 2. down
 3. left
 4. right
-        
-        """))
+            
+"""))
     
-    if direction == 1:
-        print("I'm at row: ", character.location_row)
+    if direction == 1:#UP
+        
         if character.location_row-1 > 0:
             character = map.deleteThing(character)
             map.moveThing(character, character.location_row-1, character.location_column)
             print(map.seeMap())
         else:
-            print("you hit a wall")
-    if direction == 2:
-        print(map.size)
+            print("you hit the northern wall")
+    if direction == 2:#DOWN
         if character.location_row+1 < map.size:
             character = map.deleteThing(character)
             map.moveThing(character, character.location_row+1, character.location_column)
             print(map.seeMap())  
         else:
-            print("you hit a wall")
-    if direction == 3:
-        try:
+            print("you hit the southern wall")
+    if direction == 3:#LEFT
+        if character.location_column-1 >= 0:
             character = map.deleteThing(character)
             map.moveThing(character, character.location_row, character.location_column-1)  
-        except:
-            print("you hit a wall")
-    if direction == 4:
-        try:
+        else:
+            print("you hit the western wall")
+    if direction == 4:#RIGHT
+        if character.location_column+1 < map.size:
             character = map.deleteThing(character)
             map.moveThing(character, character.location_row, character.location_column+1)  
-        except:
-            print("you hit a wall")
+        else:
+            print("you hit the eastern wall")
+    print()
+    print()
+
+    for i in map.actualized_map[character.location_row][character.location_column]:
+        print(f"You have a {i} in the room. ")
+        
+    displayInGameMenu(character, map)
+    
+
+
+
+
+
+
+
+
+
+
 
 
 def play(map):
@@ -254,7 +277,7 @@ def play(map):
     
     
     while True:
-        user_choice = displayInGameMenu()
+        user_choice = displayInGameMenu(main_character, map)
         if user_choice == 1:
             move(map)
         if user_choice == 2:
