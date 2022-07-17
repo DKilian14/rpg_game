@@ -25,7 +25,6 @@ class Map:
         for i in range(len(self.actualized_map)):
             print(self.actualized_map[i])
                 
-
 #-------------------------------THING CREATION ------------------------------------------------------------------------------------------------------
     def addThing(self):
         
@@ -82,11 +81,33 @@ class Map:
             all_things_in_map.append(every_thing[1])
         
     def getListOfAllThings(self):
+        
+        
         all_things_in_map = []
         for every_row in range(len(self.actualized_map)):
             for every_cell in range(len(self.actualized_map[every_row])):
                 self.getListOfAllThingsInCell(self.actualized_map[every_row][every_cell], all_things_in_map)      
         return all_things_in_map
+    
+    def getAllNPCsInRoom(self):
+        main_character = findMainCharacter(self)
+        things_in_room = self.getListOfAllThings()
+        all_NPCs_in_room = []
+        for i in things_in_room : 
+            if type(i).__name__ == 'NPC' and (i.location_row == main_character.location_row and i.location_column == main_character.location_column): # if a thing is an NPC and is in the same room as the character...
+                all_NPCs_in_room.append(i)
+        return all_NPCs_in_room
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     ########################## PRINT ALL THINGS ###########################################
     def printAllThings(self):
@@ -185,18 +206,29 @@ def displayInGameMenu(character, map):
     
     for i in range(len(menu)):
         print(i+1, menu[i])
-    user_choice = int(input("what would you like to do? "))
-    return user_choice
+    return menu
+
+def displayFightableNPCs(all_npcs):
+    for i in range(len(all_npcs)): 
+        print(f"{i+1}. {all_npcs[i].name}")
+    
+
 
 #----------------GAMEPLAY FUNCTIONS---------------------------------------------------------------------------
 def determineInGameMenu(room):
     menu = ['move', 'check status', 'save and quit']
     for i in room: # iterate through every item in the room
-        if type(i[1]).__name__ == 'Item': #if the 'thing' has a class type of 'Item':
-            menu.append('Pick Up Item') #add 'pick up item' to the menu.
+        # if type(i[1]).__name__ == 'Item': #if the 'thing' has a class type of 'Item':
+        #     menu.append('Pick Up Item') #add 'pick up item' to the menu.
         if type(i[1]).__name__ == 'NPC':#if the 'thing' has a class type of 'NPC':
             print('Someone is in here with you!!')
             menu.append('Fight!') #add 'fight!' to the menu.
+            
+            
+            
+            
+            
+    
     return menu
 
 def findMainCharacter(map):
@@ -219,7 +251,7 @@ def move(map):
     
     if direction == 1:#UP
         
-        if character.location_row-1 > 0:
+        if character.location_row-1 >= 0:
             character = map.deleteThing(character)
             map.moveThing(character, character.location_row-1, character.location_column)
             print(map.seeMap())
@@ -250,10 +282,35 @@ def move(map):
     for i in map.actualized_map[character.location_row][character.location_column]:
         print(f"You have a {i} in the room. ")
         
+def attack(map):
+    all_npcs = map.getAllNPCsInRoom()
+    character = findMainCharacter(map)
+    query = input(" >> ")
+    for i in all_npcs:
+        if query == i.name:
+            i.health = i.health - character.power
+            print(f"{i.name}  took {character.power} damage from {character.name}. {i.name} went from {i.health + character.power} health to {i.health}")
+            if i.health <= 0: #if NPC dies, remove from the map. 
+                map.deleteThing(i)
+                pass
+            else:             #if the NPC is alive, the NPC will attack the character.
+                character.health = character.health - i.power
+                print(f"{character.name} took {i.power} damage from {i.name}. {character.name} went from {character.health + i.power} health to {character.health} ")
+                
+            
+            
     
     
-
-
+    
+        
+def fight(map):
+    print()
+    print('FIGHT WHO? (Type Name)')
+    all_npcs = map.getAllNPCsInRoom()
+    displayFightableNPCs(all_npcs)
+    attack(map)
+    
+        
 
 def play(map):
     
@@ -262,7 +319,8 @@ def play(map):
     
     
     while True:
-        user_choice = displayInGameMenu(main_character, map)
+        displayInGameMenu(main_character, map)
+        user_choice= int(input('what would you like to do?'))
         if user_choice == 1:
             move(map)
         if user_choice == 2:
@@ -271,7 +329,10 @@ def play(map):
             save(map)
             print('Game saved. thank you for playing!')
             break
-    
+        if user_choice == 4:
+            print('fighting!')
+            fight(map)
+
     
 
 ################## STARTS THE CREATION MENU. 
