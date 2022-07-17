@@ -4,7 +4,6 @@ def save(map):
     with open('data.pickle','wb') as filehandler:
         pickle.dump(map.actualized_map, filehandler)
 
-
 class Map:
     def __init__(self, name, size,data):
         self.name = name
@@ -28,7 +27,6 @@ class Map:
                 
 
 #-------------------------------THING CREATION ------------------------------------------------------------------------------------------------------
-        
     def addThing(self):
         
         menu = ['item', 'character']
@@ -77,9 +75,8 @@ class Map:
         newObj = PC(new_name, new_weight, new_location_row, new_location_column, new_power, new_health, new_items)
         self.actualized_map[newObj.location_row][newObj.location_column].append([newObj.name,newObj])
    
-            
+    
 #----------------------------GET LIST OF ALL THINGS------------------------------------------------------------------------------------------------------------------
-
     def getListOfAllThingsInCell(self, the_cell, all_things_in_map):
         for every_thing in the_cell:
             all_things_in_map.append(every_thing[1])
@@ -92,15 +89,12 @@ class Map:
         return all_things_in_map
     
     ########################## PRINT ALL THINGS ###########################################
-    
     def printAllThings(self):
         all_things_in_map = self.getListOfAllThings()
         for every_item in all_things_in_map:
             print(every_item.__dict__.get('name'), "is at [",  every_item.__dict__.get('location_row'), ", ", every_item.__dict__.get('location_column'),']')
         
-        
     ########################### FIND THING BY NAME #########################################
-
     def lookUpByName(self):
         all_things = self.getListOfAllThings()
         query= input("Enter the name of the thing >>")
@@ -108,7 +102,6 @@ class Map:
             if i.name == query:
                 print(f"{i.name} is at {i.location_row}, {i.location_column}")
                 return i        
-        
         
     ########################## DELETE A THING ##############################################
     # *************ISSUE******* if there are any things with the same name, this will delete the first thing with a matching name on the map. This is due to not having unique identifiers. 
@@ -185,25 +178,26 @@ def displayCreationMenu():
         print(i+1, creation_menu[i])
     user_choice = int(input("what would you like to do? "))
     return user_choice
- 
- 
- 
 
 def displayInGameMenu(character, map):
-    menu = ['move', 'check status', 'save and quit']
     room = map.actualized_map[character.location_row][character.location_column]
-    for i in room: # for every item in the room the hero is in, check if there is at least one item and/or at least one enemy. This will then append the menu list to add 'use item' or 'fight'
-        # if i
-    
+    menu = determineInGameMenu(room)# decide if the menu should be changed based on the room the PC is in. 
     
     for i in range(len(menu)):
         print(i+1, menu[i])
     user_choice = int(input("what would you like to do? "))
     return user_choice
 
-
 #----------------GAMEPLAY FUNCTIONS---------------------------------------------------------------------------
-
+def determineInGameMenu(room):
+    menu = ['move', 'check status', 'save and quit']
+    for i in room: # iterate through every item in the room
+        if type(i[1]).__name__ == 'Item': #if the 'thing' has a class type of 'Item':
+            menu.append('Pick Up Item') #add 'pick up item' to the menu.
+        if type(i[1]).__name__ == 'NPC':#if the 'thing' has a class type of 'NPC':
+            print('Someone is in here with you!!')
+            menu.append('Fight!') #add 'fight!' to the menu.
+    return menu
 
 def findMainCharacter(map):
     for i in map.getListOfAllThings():
@@ -256,17 +250,8 @@ def move(map):
     for i in map.actualized_map[character.location_row][character.location_column]:
         print(f"You have a {i} in the room. ")
         
-    displayInGameMenu(character, map)
     
-
-
-
-
-
-
-
-
-
+    
 
 
 
@@ -332,8 +317,6 @@ def main():
     print(f'Welcome to Mordor!!')
 
     play(mordor)
-
-        
 
         
 try:
