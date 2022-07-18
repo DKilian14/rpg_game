@@ -231,6 +231,7 @@ def determineInGameMenu(room):
         if type(i[1]).__name__ == 'NPC':#if the 'thing' has a class type of 'NPC':
             print('Someone is in here with you!!')
             menu.append('Fight!') #add 'fight!' to the menu.
+            break
             
             
             
@@ -287,17 +288,19 @@ def move(map):
     print()
     print()
 
-    for i in map.actualized_map[character.location_row][character.location_column]:
-        print(f"You have a {i} in the room. ")
+
         
 def lootRoom(map):
     main_character = findMainCharacter(map)
     all_items = map.getAllItemsInRoom()
-    print(f'character had {main_character.items} in their inventory.')
-    main_character.items.append(all_items)
-    print(f'character now has  {main_character.items} in their inventory.')
-    for i in all_items:
-        map.deleteThing(i)   
+    if all_items:
+        print(f'character had {main_character.items} in their inventory.')
+        main_character.items.append(all_items)
+        print(f'character now has  {main_character.items} in their inventory.')
+        for i in all_items:
+            map.deleteThing(i)   
+    else: 
+        print('there are no items in the room')
         
         
 def attack(map):
@@ -318,6 +321,8 @@ def attack(map):
             if character.health < 0: 
                 print('you have died...Restart from Last save')
                 exit()
+    
+    
                     
 def fight(map):
     print()

@@ -1,3 +1,24 @@
+# RPG Map Generator and Player
+This Python script is an RPG map editor that allows the user to create and play thier own game.
+
+The script starts with an **Editor** menu that allows the user to populate the map with:
+>
+>Things, which can be
+>>Items
+>>Characters, which can be
+>>>>NPCs
+>>>>PCs
+
+
+
+
+
+
+
+
+
+
+
 # RPG Game
 In this exercise, you will develop a hero RPG (*Role Playing Game*) using all of the cool new python knowledge you've acquired. This game will be created using **Object Oriented Programming**.
 
