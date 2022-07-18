@@ -15,7 +15,7 @@ Once placed in the **Map**, the attributes of the **Thing**s, including location
 
 ## As of 7/18/22:
 
-after map creation and population, the user can choose to save the map and play the game as the **PC**. The **PC** can then
+After map creation and population, the user can choose to save the map and play the game as the **PC**. The **PC** can then
 navigate rooms of the map and attempt to pick up the **Item**s or fight the **NPC**s in the room. The **PC** wins when all **NPC**s are destroyed. 
 
 The code is built to allow for changes in the future, which will allow the **PC** to use **Item**s, receive attribute modifiers from **Item**s.
