@@ -8,6 +8,7 @@ The script starts with an **Editor** menu that allows the user to populate the m
 >
 >>-**Characters**, which can be
 >>>-**NPC**s
+>
 >>>-**PC**s
 
 
