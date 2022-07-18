@@ -4,9 +4,9 @@ This Python script is an RPG map editor that allows the user to create and play 
 The script starts with an **Editor** menu that allows the user to populate the map with:
 >
 >Things, which can be
->>Items
+>-Items
 >
->>Characters, which can be
+>-Characters, which can be
 >>>NPCs
 >>>PCs
 
