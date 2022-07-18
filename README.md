@@ -7,7 +7,7 @@ The script starts with an **Editor** menu that allows the user to populate the m
 >>-**Items**
 >>-**Characters**, which can be
 >>>-**NPC**s
->>>-**PC**s
+>-**PC**s
 
 
 
