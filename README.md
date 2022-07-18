@@ -5,10 +5,9 @@ The script starts with an **Editor** menu that allows the user to populate the m
 >
 >Things, which can be
 >>-Items
->
 >>-Characters, which can be
 >>>NPCs
->>>PCs
+>>-PCs
 
 
 
