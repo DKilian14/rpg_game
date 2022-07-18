@@ -98,6 +98,14 @@ class Map:
                 all_NPCs_in_room.append(i)
         return all_NPCs_in_room
     
+    def getAllItemsInRoom(self):
+        main_character = findMainCharacter(self)
+        things_in_room = self.getListOfAllThings()
+        all_items_in_room = []
+        for i in things_in_room : 
+            if type(i).__name__ == 'Item' and (i.location_row == main_character.location_row and i.location_column == main_character.location_column): # if a thing is an item and is in the same room as the character...
+                all_items_in_room.append(i)
+        return all_items_in_room
     
     
     
@@ -216,7 +224,7 @@ def displayFightableNPCs(all_npcs):
 
 #----------------GAMEPLAY FUNCTIONS---------------------------------------------------------------------------
 def determineInGameMenu(room):
-    menu = ['move', 'check status', 'save and quit']
+    menu = ['move', 'check status', 'save and quit', 'loot the room']
     for i in room: # iterate through every item in the room
         # if type(i[1]).__name__ == 'Item': #if the 'thing' has a class type of 'Item':
         #     menu.append('Pick Up Item') #add 'pick up item' to the menu.
@@ -282,6 +290,16 @@ def move(map):
     for i in map.actualized_map[character.location_row][character.location_column]:
         print(f"You have a {i} in the room. ")
         
+def lootRoom(map):
+    main_character = findMainCharacter(map)
+    all_items = map.getAllItemsInRoom()
+    print(f'character had {main_character.items} in their inventory.')
+    main_character.items.append(all_items)
+    print(f'character now has  {main_character.items} in their inventory.')
+    for i in all_items:
+        map.deleteThing(i)   
+        
+        
 def attack(map):
     all_npcs = map.getAllNPCsInRoom()
     character = findMainCharacter(map)
@@ -291,18 +309,16 @@ def attack(map):
             i.health = i.health - character.power
             print(f"{i.name}  took {character.power} damage from {character.name}. {i.name} went from {i.health + character.power} health to {i.health}")
             if i.health <= 0: #if NPC dies, remove from the map. 
+                print(f'You have destroyed {i.name}!')
                 map.deleteThing(i)
-                pass
             else:             #if the NPC is alive, the NPC will attack the character.
                 character.health = character.health - i.power
                 print(f"{character.name} took {i.power} damage from {i.name}. {character.name} went from {character.health + i.power} health to {character.health} ")
-                
             
-            
-    
-    
-    
-        
+            if character.health < 0: 
+                print('you have died...Restart from Last save')
+                exit()
+                    
 def fight(map):
     print()
     print('FIGHT WHO? (Type Name)')
@@ -329,9 +345,13 @@ def play(map):
             save(map)
             print('Game saved. thank you for playing!')
             break
-        if user_choice == 4:
+        if user_choice == 4: 
+            print('looting')
+            lootRoom(map)
+        if user_choice == 5:
             print('fighting!')
             fight(map)
+            
 
     
 
